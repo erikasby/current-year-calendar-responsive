@@ -17,43 +17,15 @@ const maxEventCount = 10;
 const fullYear = document.querySelector('.full-year');
 const mainMonth = document.querySelector('.main-month h1');
 
+// Checks if there are any events in sessionStorage
 events = JSON.parse(sessionStorage.getItem('events'));
 if (events === null) {
   events = [];
 }
 
-// sessionStorage.setItem(
-//   'events',
-//   JSON.stringify([
-//     {
-//       title: 'Zoo',
-//       date: '2022-1-28',
-//       startTime: '14:30',
-//       endTime: '20:40',
-//       type: 'meeting',
-//       description: 'Everyone will meet at the hall and then go to the zoo',
-//     },
-//     {
-//       title: 'London trip',
-//       date: '2022-1-5',
-//       startTime: '14:30',
-//       endTime: '20:40',
-//       type: 'out-of-office',
-//       description:
-//         'We will fly to London and call uber to drive us to the hotel',
-//     },
-//     {
-//       title: 'Weekend show',
-//       date: '2022-1-11',
-//       startTime: '14:30',
-//       endTime: '20:40',
-//       type: 'call',
-//       description: 'We will have a call on Zoom',
-//     },
-//   ])
-// );
-
+// Renders calendar
 const renderCalendar = function () {
+  // Helps to check which month and year are being rendered
   if (currentMonthEqualsZero === 12) {
     currentYearEqualsZero++;
     currentMonthEqualsZero = 0;
@@ -122,15 +94,10 @@ const renderCalendar = function () {
       tempHtml += html;
     }
 
+    // Embed into container if there is a meeting, call or out-of-office event
     if (events !== null) {
       for (let j = 0; j < events.length; j++) {
         const dateSplitted = events[j].date.split('-');
-        // console.log(
-        //   `${dateSplitted[0]}-${dateSplitted[1]}-${
-        //     Number(dateSplitted[2]) + firstWeekday - 1
-        //   }`
-        // );
-        // console.log(`${year}-${month + 1 + currentMonthEqualsZero}-${i}`);
         if (
           `${dateSplitted[0]}-${dateSplitted[1]}-${
             Number(dateSplitted[2]) + firstWeekday - 1
@@ -156,6 +123,7 @@ const renderCalendar = function () {
     }
   }
 
+  // Creating days container event listener when Calendar is rendered
   days.addEventListener('click', function (e) {
     if (Number(e.target.textContent)) {
       let eventData;
@@ -173,6 +141,7 @@ const renderCalendar = function () {
         }
       }
 
+      // Renders available event
       const renderEvent = function (meetingType) {
         return `
           <h1>${meetingType} Event</h1>
@@ -195,80 +164,79 @@ const renderCalendar = function () {
           `;
       };
 
+      // Renders create event
       const renderCreateEvent = function () {
         return `
         <h1>Create Event</h1>
         <div class="create-event">
-              <form class="create-event-form">
-                <label for="e-title">Title</label>
-                <input
-                  required
-                  type="text"
-                  id="e-title"
-                  name="e-title"
-                  placeholder="Weekend show"
-                />
-                <label for="e-date">Date</label>
-                <input
-                  required
-                  type="text"
-                  id="e-date"
-                  name="e-date"
-                  placeholder="2022-05-14"
-                  value="${year}-${month + 1 + currentMonthEqualsZero}-${
+          <form class="create-event-form">
+            <label for="e-title">Title</label>
+            <input
+            required
+            type="text"
+            id="e-title"
+            name="e-title"
+            placeholder="Weekend show"
+            />
+            <label for="e-date">Date</label>
+            <input
+            required
+            type="text"
+            id="e-date"
+            name="e-date"
+            placeholder="2022-05-14"
+            value="${year}-${month + 1 + currentMonthEqualsZero}-${
           e.target.textContent
         }"
-        readonly
-                />
-                <label for="e-start-time">Start time</label>
-                <input
-                  required
-                  type="text"
-                  id="e-start-time"
-                  name="e-start-time"
-                  placeholder="14:30"
-                />
-                <label for="e-end-time">End time</label>
-                <input
-                  required
-                  type="text"
-                  id="e-end-time"
-                  name="e-end-time"
-                  placeholder="20:40"
-                />
-                <label for="e-type">Type</label>
-                <select name="e-type" id="e-type">
-                  <option value="meeting">Meeting</option>
-                  <option value="call">Call</option>
-                  <option value="out-of-office">Out of office</option>
-                </select>
-                <label for="e-description">Description</label>
-                <textarea
-                  rows="4"
-                  cols="50"
-                  required
-                  type="text"
-                  id="e-description"
-                  name="e-description"
-                  placeholder="Everyone will meet at the hall"
-                ></textarea>
-                <button class="create">Create</button>
-                <button class="cancel">Cancel</button>
-              </form>
-            </div>
+             readonly
+            />
+            <label for="e-start-time">Start time</label>
+            <input
+            required
+            type="text"
+            id="e-start-time"
+            name="e-start-time"
+            placeholder="14:30"
+            />
+            <label for="e-end-time">End time</label>
+            <input
+            required
+            type="text"
+            id="e-end-time"
+            name="e-end-time"
+            placeholder="20:40"
+            />
+            <label for="e-type">Type</label>
+            <select name="e-type" id="e-type">
+            <option value="meeting">Meeting</option>
+            <option value="call">Call</option>
+            <option value="out-of-office">Out of office</option>
+            </select>
+            <label for="e-description">Description</label>
+            <textarea
+            rows="4"
+            cols="50"
+            required
+            type="text"
+            id="e-description"
+            name="e-description"
+            placeholder="Everyone will meet at the hall"></textarea>
+            <button class="create">Create</button>
+            <button class="cancel">Cancel</button>
+          </form>
+        </div>
         `;
       };
 
+      // Cancels event
       const cancelEvent = function () {
         eventsElement.innerHTML = '';
       };
 
+      // Deletes event
       const deleteEvent = function () {
         const eDate = document.querySelector('#date-information').textContent;
-        console.log(eDate);
-        console.log(eventData.date);
         if (eDate === eventData.date) {
-          console.log(events.length);
           for (let i = 0; i < events.length; i++) {
             if (events[i].date === eDate) {
               events.splice(i, 1);
@@ -278,20 +246,22 @@ const renderCalendar = function () {
               cancelEvent();
             }
           }
-          console.log(events.length);
         }
         alert('Event deleted.');
       };
 
+      // Creates event
       const createEvent = function (e) {
         e.preventDefault();
+        // Gets all the necessary elements
         const eTitle = document.querySelector('#e-title').value;
         const eDate = document.querySelector('#e-date').value;
         const eStartTime = document.querySelector('#e-start-time').value;
         const eEndTime = document.querySelector('#e-end-time').value;
         const eType = document.querySelector('#e-type').value;
         const eDescription = document.querySelector('#e-description').value;
-        console.log(eTitle, eDate, eStartTime, eEndTime, eType, eDescription);
+
+        // Checks if all fields are checked
         if (
           [eTitle, eDate, eStartTime, eEndTime, eType, eDescription].every(
             (e) => e !== ''
@@ -305,6 +275,7 @@ const renderCalendar = function () {
             type: eType,
             description: eDescription,
           });
+
         sessionStorage.setItem('events', JSON.stringify(events));
         events = JSON.parse(sessionStorage.getItem('events'));
         renderCalendar();
@@ -312,6 +283,7 @@ const renderCalendar = function () {
         alert('Event created.');
       };
 
+      // Checks which elements of Event to render by e.target className
       const eventsElement = document.querySelector('.events');
       if (
         e.target.classList.contains('meeting') &&
@@ -352,12 +324,14 @@ const renderCalendar = function () {
 };
 renderCalendar();
 
+// NEXT button
 const next = document.querySelector('.next');
 next.addEventListener('click', function () {
   currentMonthEqualsZero++;
   renderCalendar();
 });
 
+// PREV button
 const prev = document.querySelector('.prev');
 prev.addEventListener('click', function () {
   currentMonthEqualsZero--;
